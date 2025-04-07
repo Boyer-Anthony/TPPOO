@@ -9,6 +9,7 @@ public class PlayerCharacterGood : MonoBehaviour
 
     [SerializeField] private string playerName;
     [SerializeField] private int moveSpeed;
+    [SerializeField] private int turnSpeed;
     [SerializeField] private bool isInvincible;
     [SerializeField] private int gold = 0;
 
@@ -45,6 +46,12 @@ public class PlayerCharacterGood : MonoBehaviour
     {
         get { return moveSpeed; }
         private set { moveSpeed = Mathf.Clamp(value, 0, 10); }
+    }
+
+    public int TurnSpeed
+    {
+        get { return turnSpeed; }
+        private set { turnSpeed = Mathf.Clamp(value, 0, 20); }
     }
 
     public int MaxHealth
@@ -89,6 +96,7 @@ public class PlayerCharacterGood : MonoBehaviour
         xpToNextlevel = 100;
         level = 0;
 
+        SpeedTurn(100);
         SpeedMove(15);
         GainXp(428);
         
@@ -97,11 +105,16 @@ public class PlayerCharacterGood : MonoBehaviour
 
     public void MovementPlayer()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+        float moveX = Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime;
+        float moveZ = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
 
-        Vector3 move = new Vector3(moveX, 0, moveZ) * moveSpeed;
-        transform.Translate(move * Time.deltaTime);
+
+        transform.Translate(Vector3.forward * moveZ);
+        transform.Rotate(Vector3.up * moveX);
+
+
+        /*Vector3 move = new Vector3(moveX, 0, moveZ) * moveSpeed;
+        transform.Translate(move * Time.deltaTime);*/
 
     }
 
@@ -121,6 +134,11 @@ public class PlayerCharacterGood : MonoBehaviour
                 break;
         }
 
+    }
+
+    public void SpeedTurn(int amount)
+    {
+        turnSpeed += amount;
     }
 
 

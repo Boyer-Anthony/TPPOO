@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TP2_Heritage;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -22,8 +23,8 @@ public class PlayerCharacterGood : MonoBehaviour
     [SerializeField] private int level;
     [SerializeField] private int xpToNextlevel;
 
-    [Header(" Statistique")]
-    [SerializeField] private int Force;
+    [Header("Statistique")]
+    [SerializeField] private int force;
     [SerializeField] private int Agile;
     
 
@@ -76,6 +77,12 @@ public class PlayerCharacterGood : MonoBehaviour
     public int Level { get { return level; } }                   // === > propriétés en lecture seule(read-only) depuis l’extérieur. ne peut pas les modifier directement de l’extérieur du script.
     public int XPToNextlevel { get { return xpToNextlevel; } } //
 
+    public int Force { get => force; private set => force = value; }
+
+
+
+
+
 
 
     #endregion
@@ -83,7 +90,7 @@ public class PlayerCharacterGood : MonoBehaviour
     void Update()
     {
         MovementPlayer();
-        RecoveryHealth();
+        //RecoveryHealth();
 
     }
 
@@ -96,8 +103,8 @@ public class PlayerCharacterGood : MonoBehaviour
         xpToNextlevel = 100;
         level = 0;
 
-        SpeedTurn(100);
-        SpeedMove(15);
+        //SpeedTurn(100);
+        //SpeedMove(15);
         GainXp(428);
         
         
@@ -159,6 +166,8 @@ public class PlayerCharacterGood : MonoBehaviour
         }
 
     }
+
+    
 
     public void RecoveryHealth()
     {
@@ -234,5 +243,16 @@ public class PlayerCharacterGood : MonoBehaviour
 
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Zombie"))
+        {
+            Zombie zombie = collision.gameObject.GetComponent<Zombie>();
+            if(zombie != null)
+            {
+                zombie.TakeDamage(Force);
+            }
+        }
+    }
 
 }

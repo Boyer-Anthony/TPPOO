@@ -2,33 +2,59 @@ using UnityEngine;
 
 namespace TP2_Heritage
 {
-    public class Skeleton : MonoBehaviour
+    public class Skeleton : Enemy
     {
-        public int health = 80;
-        public int damage = 15;
-        public float speed = 3f;
-        public float detectionRange = 12f;
-        private Transform player;
+
+        #region Constructeur
         
-        void Start() {
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+        // Constructeur vide
+        public Skeleton()
+        {
+            Health = 80;
+            Damage = 15;
+            Speed = 3f;
+            DetectionRange = 12f;
+
         }
-        
-        void Update() {
-            if (Vector3.Distance(transform.position, player.position) < detectionRange) {
-                Vector3 direction = (player.position - transform.position).normalized;
-                transform.position += direction * speed * Time.deltaTime;
+
+        public Skeleton(int health, int  damage, float speed, float detectionRange)
+        {
+            Health = health;
+            Damage = damage;
+            Speed = speed;
+            DetectionRange = detectionRange;
+        }
+
+        #endregion
+
+        protected override void Start() 
+        {
+            base.Start();
+            Skeleton skeleton = new Skeleton();
+            
+        }
+
+        protected override void Update()
+        {
+            
+            if (Vector3.Distance(transform.position, Player.position) < DetectionRange)
+            {
+                Vector3 direction = (Player.position - transform.position).normalized;
+                transform.position += direction * Speed * Time.deltaTime;
             }
         }
         
-        public void TakeDamage(int amount) {
-            health -= amount;
-            if (health <= 0) {
+        public void TakeDamage(int amount) 
+        {
+            Health -= amount;
+            if (Health <= 0) 
+            {
                 Die();
             }
         }
         
-        private void Die() {
+        private void Die()
+        {
             Destroy(gameObject);
         }
         
@@ -36,7 +62,7 @@ namespace TP2_Heritage
             if (collision.gameObject.CompareTag("Player")) {
                 PlayerCharacter player = collision.gameObject.GetComponent<PlayerCharacter>();
                 if (player != null) {
-                    player.TakeDamage(damage);
+                    player.TakeDamage(Damage);
                 }
             }
         }

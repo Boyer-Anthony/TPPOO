@@ -2,43 +2,73 @@ using UnityEngine;
 
 namespace TP2_Heritage
 {
-    public class Zombie : MonoBehaviour
+    public class Zombie : Enemy
     {
-        public int health = 100;
-        public int damage = 10;
-        public float speed = 2f;
-        public float detectionRange = 10f;
-        private Transform player;
         
-        void Start() {
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+        #region Constructeur
+
+        // Constructeur vide
+        public Zombie()
+        {
+            Health = 100;
+            Damage = 15;
+            Speed = 2f;
+            DetectionRange = 10f;
+            GiveXP = 150;
+        }
+
+        public Zombie(int health, int damage, float speed, float detectionRange)
+        {
+            Health = health;
+            Damage = damage;
+            Speed = speed;
+            DetectionRange = detectionRange;
+        }
+
+        #endregion
+
+        protected override void Start() 
+        {
+            base.Start();
+            
         }
         
-        void Update() {
-            if (Vector3.Distance(transform.position, player.position) < detectionRange) {
-                Vector3 direction = (player.position - transform.position).normalized;
-                transform.position += direction * speed * Time.deltaTime;
-            }
+        protected override void Update() 
+        {
+            base.Update();
         }
         
-        public void TakeDamage(int amount) {
-            health -= amount;
-            if (health <= 0) {
+        public void TakeDamage(int amount) 
+        {
+            Health -= amount;
+            if (Health <= 0) 
+            {
                 Die();
             }
         }
         
-        private void Die() {
+        private void Die() 
+        {
+            //PlayerCharacterGood player = gameObject.GetComponent<PlayerCharacterGood>();
+           // playerChara = gameObject.GetComponent<PlayerCharacterGood>();
+            PlayerChara.GainXp(GiveXP);
             Destroy(gameObject);
         }
         
-        void OnCollisionEnter(Collision collision) {
-            if (collision.gameObject.CompareTag("Player")) {
-                PlayerCharacter player = collision.gameObject.GetComponent<PlayerCharacter>();   
-                if (player != null) {
-                    player.TakeDamage(damage);
+        void OnCollisionEnter(Collision collision) 
+        {
+            if (collision.gameObject.CompareTag("Player")) 
+            {
+                PlayerCharacterGood player = collision.gameObject.GetComponent<PlayerCharacterGood>();   
+                if (player != null) 
+                {
+                    player.TakeDamage(Damage);
+                   
                 }
             }
+            
         }
+
+       
     }
 }

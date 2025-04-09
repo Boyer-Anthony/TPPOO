@@ -1,18 +1,60 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TP3_Polymorphisme
 {
     public class WeaponManager : MonoBehaviour
     {
-        public GameObject sword;
-        public GameObject bow;
-        public GameObject wand;
-        
-        private string currentWeapon = "sword";
-        
+        [SerializeField]
+        private Weapon currentWeapon;
+        [SerializeField]
+        private List<Weapon> equipement = new List<Weapon>();
+
+        [Header("Arme")]
+        Weapon sword = new Sword();
+        Weapon bow = new Bow();
+        Weapon wand = new Wand();
+
+        public Weapon CurrentWeapon { get => currentWeapon; set => currentWeapon = value; }
+        public List<Weapon> Equipement { get => equipement; set => equipement = value; }
+        public Weapon Sword { get => sword; set => sword = value; }
+        public Weapon Bow { get => bow; set => bow = value; }
+        public Weapon Wand { get => wand; set => wand = value; }
+
+        private void Start()
+        {
+            equipement.Add(Sword);
+            equipement.Add(Wand);
+            equipement.Add(Bow);
+
+
+        }
+
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SwitchWeapon(Sword);
+                
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                
+                SwitchWeapon(Wand);
+                
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+               
+                SwitchWeapon(Bow);
+            }
+            
+        }
+
         public void Attack()
         {
-            if (currentWeapon == "sword")
+            #region Commentaire
+            /*if (currentWeapon == "sword")
             {
                 // Logique d'attaque à l'épée
                 Debug.Log("Swinging sword");
@@ -67,18 +109,20 @@ namespace TP3_Polymorphisme
                 {
                     Debug.Log("Not enough mana!");
                 }
-            }
+            }*/
+            #endregion
+
         }
-        
-        public void SwitchWeapon(string weaponName)
+
+        public void SwitchWeapon(Weapon weaponName)
         {
-            currentWeapon = weaponName;
+            CurrentWeapon = weaponName;
             
-            sword.SetActive(currentWeapon == "sword");
-            bow.SetActive(currentWeapon == "bow");
-            wand.SetActive(currentWeapon == "wand");
+           /* sword.SetActive(CurrentWeapon == "sword");
+            bow.SetActive(CurrentWeapon == "bow");
+            wand.SetActive(CurrentWeapon == "wand");*/
             
-            Debug.Log("Switched to " + currentWeapon);
+            Debug.Log("Switched to " + CurrentWeapon.Name);
         }
     }
 }
